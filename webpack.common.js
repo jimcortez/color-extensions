@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -9,19 +10,15 @@ module.exports = {
     clean: true,
     filename: './js/app.js',
   },
-  module: {
-    rules: [
-      // {
-      //   test: /\.(ttf|woff|eot)$/,
-      //   loader: 'file-loader',
-      //   options: {
-      //     name: '[name].[ext]?[hash]'
-      //   }
-      // },
-      {
-        test: /\.css$/,
-        use:['style-loader','css-loader']
-      }
-    ],
-  },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        // ALL .scss files emitted under '<top-level-dist>/email-templates', maintaining sub-folder structure
+        {
+          from: 'shaders/*.fs',
+          to: './',
+        },
+      ],
+    })
+  ]
 };

@@ -23,13 +23,6 @@
   },
   "dependencies": {
     "@eastdesire/jscolor": "^2.5.2",
-    "@scidian/iris": "^1.0.4",
-    "color-namer": "^1.4.0",
-    "colorjs.io": "^0.5.2",
-    "css-loader": "^7.1.2",
-    "file-loader": "^6.2.0",
-    "reveal.js": "^5.1.0",
-    "spectral.js": "^2.0.2",
-    "style-loader": "^4.0.0"
+    "interactive-shader-format": "^2.8.1"
   }
 }

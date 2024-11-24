@@ -1,14 +1,11 @@
-# color-saturation-charts
+# Light-Dark Contrast Shader Toys
 
 Created for CCSF Art 126 Color class
 
-Creates a series of color saturation charts, showing both paint and light mixing.
+Creates 2 designs to show light/dark contrast
 
-https://jimcortez.com/projects/saturation-charts/
+https://jimcortez.com/projects/light-dark-contrast-shaders/
 
 # Credit
-* Color manipulation from [Color.js](https://colorjs.io/)
-* More Color manipulation from [Iris](https://github.com/stevinz/iris)
-* Paint Mixing (Kubelka-Munk theory) Implementation from [Spectral.js](https://onedayofcrypto.art/)
+* Shader based on [CandyWarp by mojovideotech](https://editor.isf.video/shaders/5e7a802d7c113618206dec38)
 * Color picker from [JSColor](https://jscolor.com/)
-* Presentation/Slide framework from [Reveal.js](https://revealjs.com/)

@@ -1,12 +1,12 @@
 {
-  "short_name": "Sat. Charts",
-  "name": "Color Saturations Charts",
+  "short_name": "",
+  "name": "",
   "icons": [{
     "src": "icon.png",
     "type": "image/png",
     "sizes": "192x192"
   }],
   "start_url": "/?utm_source=homescreen",
-  "background_color": "#ffffff",
-  "theme_color": "#000000"
+  "background_color": "#fafafa",
+  "theme_color": "#fafafa"
 }

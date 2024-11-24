@@ -1,12 +1,11 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title></title>
   <link rel="stylesheet" href="css/style.css">
-
   <meta name="description" content="">
 
   <meta property="og:title" content="">
@@ -24,30 +23,32 @@
 </head>
 
 <body>
+  <template id="render-template">
+    <div class="render-container">
+      <canvas class="render-canvas"></canvas>
+      <div class="render-title"></div>
+    </div>
+  </template>
+  <h2>Color Shader Toy - Harmonic Tetrads and Saturation</h2>
+  <table>
+    <tr>
+      <td>Created for CCSF Art 126 by Jim Cortez.</td>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td>Line Color</td>
+      <td><input id="line_color_picker" data-jscolor="{}" value="rgb(256,0,0,1)" /></td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/jimcortez/contrast-saturation-shaders">Source Code Repository</a> | <a href="https://editor.isf.video/shaders/67291ec877b0fc001be8e053">ISF Editor</a></td>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td>Background Color</td>
+      <td><input id="background_color_picker" data-jscolor="{}" value="rgb(0,0,0,1)" /></td>
+    </tr>
+  </table>
 
-<!-- Add your site or application content here -->
-<div class="reveal">
-  <div id="slides" class="slides">
-    <section id="title-slide">
-      <h2 style="background: dimgrey; color: white; border-radius: 5px; margin: 10px">Saturation Charts</h2>
-      <p style="background: dimgrey; color: white; border-radius: 5px; margin: 10px; font-size: large">by Jim Cortez
-        <br/> (For CCSF Art 126)
-        <br/> <a href="https://github.com/jimcortez/color-saturation-charts">Source Code & Library Information</a>
-      </p>
-      <div style="background: dimgrey; color: white; border-radius: 5px; margin: 10px; font-size: large">
-        <ul>
-          <li>Use ← and → keyboard to navigate between colors</li>
-          <li>Use ↑ and ↓ keyboard to navigate between light/paint charts</li>
-          <li>Press "escape" key to see all charts at once.</li>
-        </ul>
-      </div>
-    </section>
+  <ul id="renders-list"></ul>
 
+  <script src="js/app.js"></script>
 
-  </div>
-</div>
-
-<script src="js/app.js"></script>
 </body>
 
 </html>

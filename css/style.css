@@ -1,4 +1,4 @@
-/* ! HTML5 Boilerplate v9.0.1 | MIT License | https://html5boilerplate.com/
+/*! HTML5 Boilerplate v9.0.1 | MIT License | https://html5boilerplate.com/ */
 
 /* main.css 3.0.0 | MIT License | https://github.com/h5bp/main.css#readme */
 /*
@@ -89,6 +89,15 @@ textarea {
    ========================================================================== */
 
 /*
+ * Hide visually and from screen readers
+ */
+
+.hidden,
+[hidden] {
+  display: none !important;
+}
+
+/*
  * Hide only visually, but have it available for screen readers:
  * https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
  *
@@ -163,9 +172,9 @@ textarea {
 }
 
 @media print,
-  (-webkit-min-device-pixel-ratio: 1.25),
-  (min-resolution: 1.25dppx),
-  (min-resolution: 120dpi) {
+(-webkit-min-device-pixel-ratio: 1.25),
+(min-resolution: 1.25dppx),
+(min-resolution: 120dpi) {
   /* Style adjustments for high resolution devices */
 }
 
@@ -236,6 +245,22 @@ textarea {
   }
 }
 
-.slide-subtitle {
-  font-size: medium;
+#renders-list {
+  list-style: none;
+}
+
+#renders-list li {
+  display: inline-block;
+  margin: 5px; /* add spacing between items */
+}
+
+.render-container {
+  position: relative;
+}
+
+.render-title {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  color: white;
 }
