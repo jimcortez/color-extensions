@@ -12,9 +12,10 @@
    ========================================================================== */
 
 html {
-  color: #222;
+  color: #FFF;
   font-size: 1em;
   line-height: 1.4;
+  background-color: #1e1e1e;
 }
 
 /*
@@ -245,13 +246,22 @@ textarea {
   }
 }
 
-#renders-list {
+.render-controls {
   list-style: none;
+  padding-left: 7px;
 }
 
-#renders-list li {
+.render-controls li {
   display: inline-block;
-  margin: 5px; /* add spacing between items */
+}
+
+.renders-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.renders-list li {
+  display: inline-block;
 }
 
 .render-container {

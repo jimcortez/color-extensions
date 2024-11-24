@@ -29,23 +29,26 @@
       <div class="render-title"></div>
     </div>
   </template>
-  <h2>Color Shader Toy - Harmonic Tetrads and Saturation</h2>
-  <table>
-    <tr>
-      <td>Created for CCSF Art 126 by Jim Cortez.</td>
-      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-      <td>Line Color</td>
-      <td><input id="line_color_picker" data-jscolor="{}" value="rgb(256,0,0,1)" /></td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/jimcortez/contrast-saturation-shaders">Source Code Repository</a> | <a href="https://editor.isf.video/shaders/67291ec877b0fc001be8e053">ISF Editor</a></td>
-      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-      <td>Background Color</td>
-      <td><input id="background_color_picker" data-jscolor="{}" value="rgb(0,0,0,1)" /></td>
-    </tr>
-  </table>
+  <h2>Color Shader Toy - Light/Dark Contrast</h2>
+  <p>Created for CCSF Art 126 by Jim Cortez. | <a href="https://github.com/jimcortez/light-dark-contrast-shaders">Source Code Repository</a> | <a href="https://editor.isf.video/shaders/674213a1a085a6001a5cc0b6">Line Shader ISF Editor</a> | <a href="https://editor.isf.video/shaders/6743e3bda085a6001a5d452f">Warp Shader ISF Editor</a></p>
 
-  <ul id="renders-list"></ul>
+
+  <ul class="render-controls">
+    <li><button id="line_pause">&#x23F8;</button></li>
+    <li>Line Color <input id="line_color_picker" data-jscolor="{}" value="rgb(256,0,0)" /></li>
+    <li>Background Color <input id="background_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
+    <li></li>
+  </ul>
+
+  <ul id="line-renders-list" class="renders-list"></ul>
+
+  <ul class="render-controls">
+    <li><button id="warp_pause">&#x23F8;</button></li>
+    <li>Background Color <input id="warp_background_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
+
+  </ul>
+
+  <ul id="warp-renders-list" class="renders-list"></ul>
 
   <script src="js/app.js"></script>
 

@@ -63,7 +63,12 @@
    			"NAME" : "invert",
      		"TYPE" : "bool",
      		"DEFAULT" : false
-   		}
+   		},
+   		{
+      			"NAME" : "lineColor",
+      			"TYPE" : "color",
+      			"DEFAULT" : [0.0,0.0,0.0,1.0]
+      		}
   	]
 }
 */
@@ -135,19 +140,26 @@ void main(void) {
 	// Apply gap to define line width
 	float patternValue = clamp(patternDistance - lineGap, 0.0, 1.0);
 
-	// Convert baseColor to HSL and scale luminance
-	vec3 baseHsl = rgbToHsl(baseColor.rgb);
-	baseHsl.z *= luminanceScale; // Scale the luminance
-	vec3 adjustedColor = hslToRgb(baseHsl);
 
 	// Color modulation based on adjusted base color
 	float normalizedDistance = distanceFromCenter / (cycleRadius - timeOffset);
-	vec3 patternColor = fract((normalizedDistance - 1.0) * adjustedColor * loops * 0.5);
+	vec3 patternColor = fract((normalizedDistance - 1.0) * vec3(baseColor) * loops * 0.5);
 
 	// Invert or modulate colors based on pattern value
 	if (invert) {
 		gl_FragColor = vec4(patternColor / patternValue, baseColor.a);
 	} else {
 		gl_FragColor = vec4(patternColor * patternValue, baseColor.a);
+	}
+
+	if((gl_FragColor.r == 0.0 && gl_FragColor.g == 0.0 && gl_FragColor.b == 0.0)
+	|| (invert && gl_FragColor.r >= 0.9 && gl_FragColor.g >= 0.9 && gl_FragColor.b >= 0.9)){
+
+	  // Convert baseColor to HSL and scale luminance
+    vec3 baseHsl = rgbToHsl(lineColor.rgb);
+    baseHsl.z *= luminanceScale; // Scale the luminance
+    vec3 adjustedColor = hslToRgb(baseHsl);
+
+	  gl_FragColor = vec4(adjustedColor, 1.0);
 	}
 }
