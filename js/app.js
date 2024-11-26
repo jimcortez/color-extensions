@@ -146,12 +146,12 @@ line_pause_button.addEventListener("click", () => {
 })
 
 
-let thickness = 0.5;
+let thickness = 0.25;
 let warp_renders_list = document.getElementById('warp-renders-list');
 const warpRenderers = [
   await createRendering(
     'colorwarp.fs',
-    'Low-Key',
+    '',
     get_li(warp_renders_list),
     (window.innerWidth - 30) / 3,
     window.innerHeight * .9,
@@ -159,7 +159,7 @@ const warpRenderers = [
       thickness: thickness,
       warp: 3.1,
       baseColor: scaleColor256toFloat([113, 72, 14, 1]),
-      luminanceScale: 0.5,
+      luminanceScale: 0.25,
       rate: 0.7,
       // invert: true,
       lineColor: getColorArray(warpBackgroundColorPicker),
@@ -167,7 +167,7 @@ const warpRenderers = [
   ),
   await createRendering(
     'colorwarp.fs',
-    'Mid-Key',
+    '',
     get_li(warp_renders_list),
     (window.innerWidth - 30) / 3,
     window.innerHeight * .9,
@@ -183,7 +183,7 @@ const warpRenderers = [
   ),
   await createRendering(
     'colorwarp.fs',
-    'High-Key',
+    '',
     get_li(warp_renders_list),
     (window.innerWidth - 30) / 3,
     window.innerHeight * .9,
@@ -191,7 +191,7 @@ const warpRenderers = [
       thickness: thickness,
       warp: 3.1,
       baseColor: scaleColor256toFloat([113, 72, 14, 1]),
-      luminanceScale: 1.5,
+      luminanceScale: 1.75,
       rate: 0.7,
       // invert: true,
       lineColor: getColorArray(warpBackgroundColorPicker),
