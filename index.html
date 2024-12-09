@@ -32,18 +32,30 @@
   <h2>Color Shader Toy - Cool/Warm Contrast</h2>
   <p>Created for CCSF Art 126 by Jim Cortez. | <a href="https://github.com/jimcortez/cool-warm-contrast-shaders">Source Code Repository</a> | <a href="https://editor.isf.video/shaders/674213a1a085a6001a5cc0b6">Line Shader ISF Editor</a></p>
 
+  <h3>Cool-Warm Foreground/Backgrounds</h3>
   <ul class="render-controls">
     <li><button id="warp_pause">&#x23F8;</button></li>
     <li>Background Color <input id="warp_background_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
-    <li>Middle ground Color <input id="warp_middleground_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
     <li>Foreground Color <input id="warp_foreground_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
+  </ul>
+
+  <ul>
+    <li>Middle Ground is gradient starting with greyscale value of the foreground and ending with greyscale value of background.</li>
+    <li>Second pane inverts the foreground/background colors.</li>
   </ul>
 
   <ul id="warp-renders-list" class="renders-list"></ul>
 
+  <h3>Opposite-Temperatures</h3>
   <ul class="render-controls">
     <li><button id="temperature_pause">&#x23F8;</button></li>
     <li>Base Color <input id="temperature_base_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
+  </ul>
+
+  <ul>
+    <li>Foreground is main color with 20% more Saturation</li>
+    <li>Background is color with opposite temperature as foreground. Calculated with inverse of a & b in the LAB color space.</li>
+    <li>Middle Ground is gradient starting with main color, then shading until 10% of complementary color.</li>
   </ul>
 
   <ul id="temperature-renders-list" class="renders-list"></ul>

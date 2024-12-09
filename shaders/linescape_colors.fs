@@ -35,6 +35,12 @@
       "DEFAULT" : [0.1, 0.6, 0.9, 1.0],
       "LABEL" : "Base Line Color"
     },
+      {
+        "NAME" : "endLineColor",
+        "TYPE" : "color",
+        "DEFAULT" : [0.9, 0.3, 0.2, 1.0],
+        "LABEL" : "End Line Color"
+      },
     {
       "NAME" : "backgroundColor",
       "TYPE" : "color",
@@ -166,9 +172,17 @@ void main() {
 
         if (projectedHeight > lastHeight) {
             float distanceToLine = abs(projectedHeight);
-            vec3 lineColor =  smoothstep(1.0, 0.0, distanceToLine) * baseLineColor.rgb ;
-            lineColor *= exp(-0.1 * i);
-            accumulatedColor += lineColor;
+
+            // Interpolate the line color based on depth
+            float gradientMix = smoothstep(0.1, 1.0, i/lineCount);
+//             float gradientMix = exp(0.1 * i);
+
+
+            vec3 lineColor = mix(baseLineColor.rgb, endLineColor.rgb, gradientMix);
+
+//             vec3 lineColor =  baseLineColor.rgb * exp(-0.1 * i);
+
+            accumulatedColor = lineColor;
             lastHeight = projectedHeight;
             hitLine = true;
             if (projectedHeight < firstHeight) {

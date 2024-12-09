@@ -1,5 +1,11 @@
 import {Renderer} from 'interactive-shader-format'
 import JSColor from '@eastdesire/jscolor'
+import Color from "colorjs.io";
+import {
+  getColorArray,
+  getColorArrayFromColorjs,
+  get_opposite_temperature_color, get_complementary_color, get_greyscale_color
+} from './color_utils'
 
 let file_cache = {};
 
@@ -38,7 +44,7 @@ async function createRendering(fsFilename, label, parent_node, width, height, va
 
       if (values) {
         for (const [key, value] of Object.entries(values)) {
-          if (key != 'pauseRender') {
+          if (key !== 'pauseRender') {
             renderer.setValue(key, value)
           }
         }
@@ -66,17 +72,6 @@ async function createRendering(fsFilename, label, parent_node, width, height, va
   return [renderer, values];
 }
 
-function scaleColor256toFloat(colorArr) {
-  return [colorArr[0] / 256.0, colorArr[1] / 256.0, colorArr[2] / 256.0, colorArr[3]];
-}
-
-function getJSColorArray(picker) {
-  return [picker.channel('R'), picker.channel('G'), picker.channel('B'), picker.channel('A')]
-}
-
-function getColorArray(picker) {
-  return scaleColor256toFloat(getJSColorArray(picker))
-}
 
 const get_li = (container) => {
   let li = document.createElement('li');
@@ -87,33 +82,25 @@ const get_li = (container) => {
 const warpBackgroundColorPicker = new JSColor(document.getElementById('warp_background_color_picker'), {
   preset: "dark large thick",
   format: 'rgba',
-  value: 'rgb(0,88,157)',
-  alphaElement: '<input type="hidden">'
-})
-
-const warpMiddleGroundColorPicker = new JSColor(document.getElementById('warp_middleground_color_picker'), {
-  preset: "dark large thick",
-  format: 'rgba',
-  value: 'rgb(103,103,103)',
-  alphaElement: '<input type="hidden">'
+  value: 'rgb(0,88,157)'
 })
 
 const warpForegroundColorPicker = new JSColor(document.getElementById('warp_foreground_color_picker'), {
   preset: "dark large thick",
   format: 'rgba',
   value: 'rgb(255,196,80)',
-  alphaElement: '<input type="hidden">'
 })
 
 const temperatureColorPicker = new JSColor(document.getElementById('temperature_base_color_picker'), {
   preset: "dark large thick",
   format: 'rgba',
-  value: 'rgb(170,88,0)',
-  alphaElement: '<input type="hidden">'
+  value: 'rgb(255, 130, 102)',
 })
 
 
 let warp_renders_list = document.getElementById('warp-renders-list');
+let warpBackColor = new Color(warpBackgroundColorPicker.toRGBAString());
+let warpForeColor = new Color(warpForegroundColorPicker.toRGBAString());
 const warpRenderers = [
   await createRendering(
     'linescape_colors.fs',
@@ -124,7 +111,8 @@ const warpRenderers = [
     {
       panSpeed: 0.3,
       backgroundColor: getColorArray(warpBackgroundColorPicker),
-      baseLineColor: getColorArray(warpMiddleGroundColorPicker),
+      baseLineColor: getColorArrayFromColorjs(get_greyscale_color(warpForeColor)),
+      endLineColor: getColorArrayFromColorjs(get_greyscale_color(warpBackColor)),
       foregroundColor: getColorArray(warpForegroundColorPicker),
     }
   ),
@@ -137,32 +125,40 @@ const warpRenderers = [
     {
       panSpeed: 0.3,
       backgroundColor: getColorArray(warpForegroundColorPicker),
-      baseLineColor: getColorArray(warpMiddleGroundColorPicker),
+      baseLineColor: getColorArrayFromColorjs(get_greyscale_color(warpForeColor)),
+      endLineColor: getColorArrayFromColorjs(get_greyscale_color(warpBackColor)),
       foregroundColor: getColorArray(warpBackgroundColorPicker),
     }
   )
 ]
 
-warpMiddleGroundColorPicker.onChange = () => {
-  warpRenderers.forEach(([renderer, config], i) => {
-    console.log(`changing mg colors for ${i} to ${getColorArray(warpMiddleGroundColorPicker)}`)
-    config.baseLineColor = getColorArray(warpMiddleGroundColorPicker);
-  })
-}
-warpMiddleGroundColorPicker.onInput = warpMiddleGroundColorPicker.onChange
-
-
 warpBackgroundColorPicker.onChange = () => {
-  let c = getColorArray(warpBackgroundColorPicker);
-  warpRenderers[0][1].backgroundColor = c;
-  warpRenderers[1][1].foregroundColor = c;
+  let warpBackColor = new Color(warpBackgroundColorPicker.toRGBAString());
+  let warpForeColor = new Color(warpForegroundColorPicker.toRGBAString());
+  let baseLineColor = get_greyscale_color(warpForeColor)
+  let endLineColor = get_greyscale_color(warpBackColor)
+
+  warpRenderers[0][1].backgroundColor = getColorArrayFromColorjs(warpBackColor);
+  warpRenderers[0][1].baseLineColor = getColorArrayFromColorjs(baseLineColor);
+  warpRenderers[0][1].endLineColor = getColorArrayFromColorjs(endLineColor);
+  warpRenderers[1][1].foregroundColor = getColorArrayFromColorjs(warpBackColor);
+  warpRenderers[1][1].baseLineColor = getColorArrayFromColorjs(baseLineColor);
+  warpRenderers[1][1].endLineColor = getColorArrayFromColorjs(endLineColor);
 }
 warpBackgroundColorPicker.onInput = warpBackgroundColorPicker.onChange
 
 warpForegroundColorPicker.onChange = () => {
-  let c = getColorArray(warpForegroundColorPicker);
-  warpRenderers[0][1].foregroundColor = c;
-  warpRenderers[1][1].backgroundColor = c;
+  let warpBackColor = new Color(warpBackgroundColorPicker.toRGBAString());
+  let warpForeColor = new Color(warpForegroundColorPicker.toRGBAString());
+  let baseLineColor = get_greyscale_color(warpForeColor)
+  let endLineColor = get_greyscale_color(warpBackColor)
+
+  warpRenderers[0][1].backgroundColor = getColorArrayFromColorjs(warpForeColor);
+  warpRenderers[0][1].baseLineColor = getColorArrayFromColorjs(baseLineColor);
+  warpRenderers[0][1].endLineColor = getColorArrayFromColorjs(endLineColor);
+  warpRenderers[1][1].foregroundColor = getColorArrayFromColorjs(warpForeColor);
+  warpRenderers[1][1].baseLineColor = getColorArrayFromColorjs(baseLineColor);
+  warpRenderers[1][1].endLineColor = getColorArrayFromColorjs(endLineColor);
 }
 warpForegroundColorPicker.onInput = warpForegroundColorPicker.onChange
 
@@ -176,7 +172,23 @@ pause_button.addEventListener("click", () => {
 })
 
 let temperature_renders_list = document.getElementById('temperature-renders-list');
-const temperatureRenderers = [
+let mainColor = new Color(temperatureColorPicker.toRGBAString());
+
+function getForeBackColors(mainC) {
+  let foreColor = new Color(mainC).to('HSV');
+  foreColor.s *= 1.2; //increase saturation by 20%
+
+  let backColor = get_opposite_temperature_color(foreColor);
+
+  let endLineColor = get_complementary_color(mainC, );
+
+  return [foreColor, endLineColor, backColor];
+}
+
+let [foreColor, endLineColor, backColor] = getForeBackColors(mainColor);
+
+
+const temperatureRenderer =
   await createRendering(
     'linescape_colors.fs',
     '',
@@ -185,25 +197,28 @@ const temperatureRenderers = [
     window.innerHeight * .9,
     {
       panSpeed: 0.3,
-      backgroundColor: getColorArray(temperatureColorPicker),
-      baseLineColor: getColorArray(temperatureColorPicker),
-      foregroundColor: getColorArray(temperatureColorPicker),
+      backgroundColor: getColorArrayFromColorjs(backColor),
+      baseLineColor: getColorArrayFromColorjs(mainColor),
+      endLineColor: getColorArrayFromColorjs(endLineColor).map(v=>v*.1),
+      foregroundColor: getColorArrayFromColorjs(foreColor),
     }
   )
-]
 
 temperatureColorPicker.onChange = () => {
-  temperatureRenderers.forEach(([renderer, config], i) => {
-    console.log(`changing mg colors for ${i} to ${getColorArray(temperatureColorPicker)}`)
-    config.baseLineColor = getColorArray(temperatureColorPicker);
-  })
+  let [renderer, config] = temperatureRenderer;
+  mainColor = new Color(temperatureColorPicker.toRGBAString());
+  let [foreColor, endLineColor, backColor] = getForeBackColors(mainColor);
+
+  config.backgroundColor = getColorArrayFromColorjs(backColor)
+  config.baseLineColor = getColorArrayFromColorjs(mainColor)
+  config.endLineColor =  getColorArrayFromColorjs(endLineColor).map(v=>v*.1)
+  config.foregroundColor = getColorArrayFromColorjs(foreColor)
 }
 temperatureColorPicker.onInput = temperatureColorPicker.onChange
 
 let temperature_pause_button = document.getElementById('temperature_pause');
 temperature_pause_button.addEventListener("click", () => {
   console.log('pause button clicked');
-  temperatureRenderers.forEach(([renderer, config], i) => {
-    config.pauseRender = !config.pauseRender
-  })
+  let [renderer, config] = temperatureRenderer;
+  config.pauseRender = !config.pauseRender
 })
