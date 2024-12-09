@@ -1,11 +1,11 @@
-# Light-Dark Contrast Shader Toys
+# Cool-Warm Contrast Shader Toys
 
 Created for CCSF Art 126 Color class
 
-Creates 2 designs to show light/dark contrast
+Creates 2 designs to show cool/warm contrast
 
-https://jimcortez.com/projects/light-dark-contrast-shaders/
+https://jimcortez.com/projects/cool-warm-contrast-shaders/
 
 # Credit
-* Shader based on [CandyWarp by mojovideotech](https://editor.isf.video/shaders/5e7a802d7c113618206dec38)
+* Shader loosely based on [Linescape by jasferart](https://editor.isf.video/shaders/5e7a801f7c113618206deb18)
 * Color picker from [JSColor](https://jscolor.com/)

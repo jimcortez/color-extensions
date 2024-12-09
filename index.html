@@ -29,26 +29,24 @@
       <div class="render-title"></div>
     </div>
   </template>
-  <h2>Color Shader Toy - Light/Dark Contrast</h2>
-  <p>Created for CCSF Art 126 by Jim Cortez. | <a href="https://github.com/jimcortez/light-dark-contrast-shaders">Source Code Repository</a> | <a href="https://editor.isf.video/shaders/674213a1a085a6001a5cc0b6">Line Shader ISF Editor</a> | <a href="https://editor.isf.video/shaders/6743e3bda085a6001a5d452f">Warp Shader ISF Editor</a></p>
-
-
-  <ul class="render-controls">
-    <li><button id="line_pause">&#x23F8;</button></li>
-    <li>Line Color <input id="line_color_picker" data-jscolor="{}" value="rgb(256,0,0)" /></li>
-    <li>Background Color <input id="background_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
-    <li></li>
-  </ul>
-
-  <ul id="line-renders-list" class="renders-list"></ul>
+  <h2>Color Shader Toy - Cool/Warm Contrast</h2>
+  <p>Created for CCSF Art 126 by Jim Cortez. | <a href="https://github.com/jimcortez/cool-warm-contrast-shaders">Source Code Repository</a> | <a href="https://editor.isf.video/shaders/674213a1a085a6001a5cc0b6">Line Shader ISF Editor</a></p>
 
   <ul class="render-controls">
     <li><button id="warp_pause">&#x23F8;</button></li>
-    <li>Mid-Key Background Color <input id="warp_background_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
-
+    <li>Background Color <input id="warp_background_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
+    <li>Middle ground Color <input id="warp_middleground_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
+    <li>Foreground Color <input id="warp_foreground_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
   </ul>
 
   <ul id="warp-renders-list" class="renders-list"></ul>
+
+  <ul class="render-controls">
+    <li><button id="temperature_pause">&#x23F8;</button></li>
+    <li>Base Color <input id="temperature_base_color_picker" data-jscolor="{}" value="rgb(0,0,0)" /></li>
+  </ul>
+
+  <ul id="temperature-renders-list" class="renders-list"></ul>
 
   <script src="js/app.js"></script>
 

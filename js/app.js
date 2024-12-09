@@ -33,19 +33,19 @@ async function createRendering(fsFilename, label, parent_node, width, height, va
   values = values || {}
 
   const animate = () => {
-    if(!values.pauseRender){
+    if (!values.pauseRender) {
       requestAnimationFrame(animate);
 
       if (values) {
         for (const [key, value] of Object.entries(values)) {
-          if(key != 'pauseRender'){
+          if (key != 'pauseRender') {
             renderer.setValue(key, value)
           }
         }
       }
 
       renderer.draw(canvas);
-    }else{
+    } else {
       // setTimeout(animate, 100);
       requestAnimationFrame(animate);
     }
@@ -84,135 +84,126 @@ const get_li = (container) => {
   return li;
 };
 
-const lineColorPicker = new JSColor(document.getElementById('line_color_picker'), {
-  preset: "dark large thick",
-  format: 'rgb',
-  value: 'rgb(125,65,116)',
-  alphaElement: '<input type="hidden">'
-})
-
-const backgroundColorPicker = new JSColor(document.getElementById('background_color_picker'), {
-  preset: "dark large thick",
-  format: 'rgba',
-  value: 'rgb(170,88,157)',
-  alphaElement: '<input type="hidden">'
-})
-
 const warpBackgroundColorPicker = new JSColor(document.getElementById('warp_background_color_picker'), {
   preset: "dark large thick",
   format: 'rgba',
-  value: 'rgb(170,88,157)',
+  value: 'rgb(0,88,157)',
   alphaElement: '<input type="hidden">'
 })
 
-let line_renders_list = document.getElementById('line-renders-list');
-const lineRenderers = [
-  await createRendering(
-    'squigglyline.fs',
-    '',
-    get_li(line_renders_list),
-    window.innerWidth - 30,
-    window.innerHeight * .45,
-    {
-      lineColor: getColorArray(lineColorPicker),
-      backgroundBaseColor: getColorArray(backgroundColorPicker),
-      gradientSpeed: 0.5
-    })
-]
+const warpMiddleGroundColorPicker = new JSColor(document.getElementById('warp_middleground_color_picker'), {
+  preset: "dark large thick",
+  format: 'rgba',
+  value: 'rgb(103,103,103)',
+  alphaElement: '<input type="hidden">'
+})
 
-lineColorPicker.onChange = () => {
-  lineRenderers.forEach(([renderer, config], i) => {
-    console.log(`changing colors for ${i} to ${getColorArray(lineColorPicker)}`)
-    config.lineColor = getColorArray(lineColorPicker);
-    config.backgroundBaseColor = getColorArray(backgroundColorPicker);
-  })
-}
-lineColorPicker.onInput = lineColorPicker.onChange
+const warpForegroundColorPicker = new JSColor(document.getElementById('warp_foreground_color_picker'), {
+  preset: "dark large thick",
+  format: 'rgba',
+  value: 'rgb(255,196,80)',
+  alphaElement: '<input type="hidden">'
+})
 
-backgroundColorPicker.onChange = () => {
-  lineRenderers.forEach(([renderer, config], i) => {
-    console.log(`changing bg colors for ${i} to ${getColorArray(backgroundColorPicker)}`)
-    config.backgroundBaseColor = getColorArray(backgroundColorPicker);
-  })
-}
-backgroundColorPicker.onInput = backgroundColorPicker.onChange
-
-let line_pause_button = document.getElementById('line_pause');
-line_pause_button.addEventListener("click", () => {
-  console.log('pause button clicked');
-  lineRenderers.forEach(([renderer, config], i) => {
-    config.pauseRender = !config.pauseRender
-  })
+const temperatureColorPicker = new JSColor(document.getElementById('temperature_base_color_picker'), {
+  preset: "dark large thick",
+  format: 'rgba',
+  value: 'rgb(170,88,0)',
+  alphaElement: '<input type="hidden">'
 })
 
 
-let thickness = 0.25;
 let warp_renders_list = document.getElementById('warp-renders-list');
 const warpRenderers = [
   await createRendering(
-    'colorwarp.fs',
+    'linescape_colors.fs',
     '',
     get_li(warp_renders_list),
-    (window.innerWidth - 30) / 3,
+    (window.innerWidth - 30) / 2,
     window.innerHeight * .9,
     {
-      thickness: thickness,
-      warp: 3.1,
-      baseColor: scaleColor256toFloat([113, 72, 14, 1]),
-      luminanceScale: 0.25,
-      rate: 0.7,
-      // invert: true,
-      lineColor: getColorArray(warpBackgroundColorPicker),
+      panSpeed: 0.3,
+      backgroundColor: getColorArray(warpBackgroundColorPicker),
+      baseLineColor: getColorArray(warpMiddleGroundColorPicker),
+      foregroundColor: getColorArray(warpForegroundColorPicker),
     }
   ),
   await createRendering(
-    'colorwarp.fs',
+    'linescape_colors.fs',
     '',
     get_li(warp_renders_list),
-    (window.innerWidth - 30) / 3,
+    (window.innerWidth - 30) / 2,
     window.innerHeight * .9,
     {
-      thickness: thickness,
-      warp: 3.1,
-      baseColor: scaleColor256toFloat([113, 72, 14, 1]),
-      luminanceScale: 1.0,
-      rate: 0.7,
-      // invert: true,
-      lineColor: getColorArray(warpBackgroundColorPicker),
-    }
-  ),
-  await createRendering(
-    'colorwarp.fs',
-    '',
-    get_li(warp_renders_list),
-    (window.innerWidth - 30) / 3,
-    window.innerHeight * .9,
-    {
-      thickness: thickness,
-      warp: 3.1,
-      baseColor: scaleColor256toFloat([113, 72, 14, 1]),
-      luminanceScale: 1.75,
-      rate: 0.7,
-      // invert: true,
-      lineColor: getColorArray(warpBackgroundColorPicker),
+      panSpeed: 0.3,
+      backgroundColor: getColorArray(warpForegroundColorPicker),
+      baseLineColor: getColorArray(warpMiddleGroundColorPicker),
+      foregroundColor: getColorArray(warpBackgroundColorPicker),
     }
   )
 ]
 
-
-warpBackgroundColorPicker.onChange = () => {
+warpMiddleGroundColorPicker.onChange = () => {
   warpRenderers.forEach(([renderer, config], i) => {
-    console.log(`changing bg colors for ${i} to ${getColorArray(warpBackgroundColorPicker)}`)
-    config.lineColor = getColorArray(warpBackgroundColorPicker);
+    console.log(`changing mg colors for ${i} to ${getColorArray(warpMiddleGroundColorPicker)}`)
+    config.baseLineColor = getColorArray(warpMiddleGroundColorPicker);
   })
 }
+warpMiddleGroundColorPicker.onInput = warpMiddleGroundColorPicker.onChange
+
+
+warpBackgroundColorPicker.onChange = () => {
+  let c = getColorArray(warpBackgroundColorPicker);
+  warpRenderers[0][1].backgroundColor = c;
+  warpRenderers[1][1].foregroundColor = c;
+}
 warpBackgroundColorPicker.onInput = warpBackgroundColorPicker.onChange
+
+warpForegroundColorPicker.onChange = () => {
+  let c = getColorArray(warpForegroundColorPicker);
+  warpRenderers[0][1].foregroundColor = c;
+  warpRenderers[1][1].backgroundColor = c;
+}
+warpForegroundColorPicker.onInput = warpForegroundColorPicker.onChange
 
 
 let pause_button = document.getElementById('warp_pause');
 pause_button.addEventListener("click", () => {
   console.log('pause button clicked');
   warpRenderers.forEach(([renderer, config], i) => {
+    config.pauseRender = !config.pauseRender
+  })
+})
+
+let temperature_renders_list = document.getElementById('temperature-renders-list');
+const temperatureRenderers = [
+  await createRendering(
+    'linescape_colors.fs',
+    '',
+    get_li(temperature_renders_list),
+    (window.innerWidth - 30),
+    window.innerHeight * .9,
+    {
+      panSpeed: 0.3,
+      backgroundColor: getColorArray(temperatureColorPicker),
+      baseLineColor: getColorArray(temperatureColorPicker),
+      foregroundColor: getColorArray(temperatureColorPicker),
+    }
+  )
+]
+
+temperatureColorPicker.onChange = () => {
+  temperatureRenderers.forEach(([renderer, config], i) => {
+    console.log(`changing mg colors for ${i} to ${getColorArray(temperatureColorPicker)}`)
+    config.baseLineColor = getColorArray(temperatureColorPicker);
+  })
+}
+temperatureColorPicker.onInput = temperatureColorPicker.onChange
+
+let temperature_pause_button = document.getElementById('temperature_pause');
+temperature_pause_button.addEventListener("click", () => {
+  console.log('pause button clicked');
+  temperatureRenderers.forEach(([renderer, config], i) => {
     config.pauseRender = !config.pauseRender
   })
 })
