@@ -76,5 +76,6 @@ export function get_opposite_temperature_color(color) {
   let matchLab = new Color(color).to('lab')
   matchLab.a *= -1;
   matchLab.b *= -1
+  matchLab.l += 25
   return matchLab;
 }

@@ -110,6 +110,8 @@ const warpRenderers = [
     window.innerHeight * .9,
     {
       panSpeed: 0.3,
+      lineScrollSpeed: 0.25,
+      horizontalOffset: 1,
       backgroundColor: getColorArray(warpBackgroundColorPicker),
       baseLineColor: getColorArrayFromColorjs(get_greyscale_color(warpForeColor)),
       endLineColor: getColorArrayFromColorjs(get_greyscale_color(warpBackColor)),
@@ -124,6 +126,8 @@ const warpRenderers = [
     window.innerHeight * .9,
     {
       panSpeed: 0.3,
+      lineScrollSpeed: 0.25,
+      horizontalOffset: 1,
       backgroundColor: getColorArray(warpForegroundColorPicker),
       baseLineColor: getColorArrayFromColorjs(get_greyscale_color(warpForeColor)),
       endLineColor: getColorArrayFromColorjs(get_greyscale_color(warpBackColor)),
@@ -197,6 +201,8 @@ const temperatureRenderer =
     window.innerHeight * .9,
     {
       panSpeed: 0.3,
+      lineScrollSpeed: 0.25,
+      horizontalOffset: 1,
       backgroundColor: getColorArrayFromColorjs(backColor),
       baseLineColor: getColorArrayFromColorjs(mainColor),
       endLineColor: getColorArrayFromColorjs(endLineColor).map(v=>v*.1),
@@ -222,3 +228,51 @@ temperature_pause_button.addEventListener("click", () => {
   let [renderer, config] = temperatureRenderer;
   config.pauseRender = !config.pauseRender
 })
+
+let intervalId = null; // To store the interval ID
+let activeKey = null; // To track the currently active key
+
+function startAdjustingOffset(direction) {
+  // Clear any existing interval to avoid conflicts
+  if (intervalId) clearInterval(intervalId);
+
+  // Set the interval to adjust the horizontalOffset
+  intervalId = setInterval(() => {
+    if (direction === 'left') {
+      warpRenderers.forEach(([renderer, config], i) => {
+        config.horizontalOffset -= 0.1;
+      })
+      temperatureRenderer[1].horizontalOffset -= 0.1;
+    } else if (direction === 'right') {
+      warpRenderers.forEach(([renderer, config], i) => {
+        config.horizontalOffset += 0.1;
+      })
+      temperatureRenderer[1].horizontalOffset += 0.1;
+    }
+  }, 50);
+}
+
+function stopAdjustingOffset() {
+  if (intervalId) clearInterval(intervalId);
+  intervalId = null;
+  activeKey = null; // Reset active key
+}
+
+// Listen for keydown event
+window.addEventListener('keydown', (event) => {
+  if (activeKey === event.key) return; // Prevent duplicate intervals for the same key
+  if (event.key === 'ArrowLeft') {
+    activeKey = event.key;
+    startAdjustingOffset('left');
+  } else if (event.key === 'ArrowRight') {
+    activeKey = event.key;
+    startAdjustingOffset('right');
+  }
+});
+
+// Listen for keyup event
+window.addEventListener('keyup', (event) => {
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    stopAdjustingOffset();
+  }
+});
