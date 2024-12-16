@@ -4,8 +4,8 @@ const fileInput = document.getElementById('fileInput');
 const originalCanvas = document.getElementById('originalCanvas');
 const quantizedCanvas = document.getElementById('quantizedCanvas');
 const histogramCanvas = document.getElementById('histogramCanvas');
-const originalCtx = originalCanvas.getContext('2d', { willReadFrequently: true });
-const quantizedCtx = quantizedCanvas.getContext('2d', { willReadFrequently: true });
+const originalCtx = originalCanvas.getContext('2d', {willReadFrequently: true});
+const quantizedCtx = quantizedCanvas.getContext('2d', {willReadFrequently: true});
 const histogramCtx = histogramCanvas.getContext('2d');
 
 const bucketSlider = document.getElementById('bucketSlider');
@@ -67,7 +67,7 @@ fileInput.addEventListener('input', (event) => {
   const file = event.target.files[0];
   if (file) {
     drawImageOnCanvas(file, originalCanvas, originalCtx)
-      .then(()=>{
+      .then(() => {
         let imgData = originalCtx.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
         currentImageAnalysis = analyzeImage(originalCanvas, imgData.data);
 
@@ -105,7 +105,7 @@ function kMeansClustering(data, k, maxIterations = 5) {
     // Step 2: Recalculate centroids
     console.log('centroids')
     const newCentroids = Array(k).fill(null).map(() => ({
-      sum: { L: 0, a: 0, b: 0 }, // Initialize sums for LAB values
+      sum: {L: 0, a: 0, b: 0}, // Initialize sums for LAB values
       count: 0, // Initialize counts for each cluster
     }));
 
@@ -147,7 +147,7 @@ function kMeansClustering(data, k, maxIterations = 5) {
     if (isConverged) break; // Exit early if centroids are stable
   }
 
-  return { centroids, clusters };
+  return {centroids, clusters};
 }
 
 
@@ -161,10 +161,10 @@ function quantizeImage(image_analysis, img, num_buckets) {
 
   console.log("Starting k-means clustering...");
   // Perform k-means clustering
-  const { centroids, clusters } = kMeansClustering(image_analysis.color_arr, num_buckets);
+  const {centroids, clusters} = kMeansClustering(image_analysis.color_arr, num_buckets);
 
-  console.log("Centroids:", centroids);
-  console.log("Clusters:", clusters);
+  // console.log("Centroids:", centroids);
+  // console.log("Clusters:", clusters);
 
   // Map each pixel to the closest centroid and update the image data
   for (let i = 0; i < data.length; i += 4) {
@@ -180,7 +180,7 @@ function quantizeImage(image_analysis, img, num_buckets) {
     // Update RGB values based on the centroid color
     data[i] = Math.round(centroidColor[0] * 255); // Red
     data[i + 1] = Math.round(centroidColor[1] * 255); // Green
-    data[i + 2] = Math.round(centroidColor[2] * 255) ; // Blue
+    data[i + 2] = Math.round(centroidColor[2] * 255); // Blue
     data[i + 3] = centroids[clusterIndex].alpha * 255; // Ensure alpha is fully opaque
   }
 
@@ -191,39 +191,40 @@ function quantizeImage(image_analysis, img, num_buckets) {
 
 function analyzeImage(canvas, imgData) {
   let color_arr = [];
+  let non_transparent_color_arr = [];
   let colorCounts = {};
+  let non_transparent_counts = {};
   let nonTransparentPixels = 0;
   for (let i = 0; i < imgData.length; i += 4) {
-    const color = new Color('sRGB', Array.from(imgData.slice(i, i + 3)).map(v=>v/255));
-    color.alpha = imgData[i+4] == 0 ? 0: 1;
-    if(color.alpha > 0) nonTransparentPixels++;
-    color_arr.push(color);
-    let colorKey = color.toString();
-    // console.log(colorKey, imgData.slice(i, i + 3));
-    colorCounts[colorKey] = (colorCounts[colorKey] || 0) + 1;
-  }
+    const color = new Color('sRGB', Array.from(imgData.slice(i, i + 3)).map(v => v / 255));
+    color.alpha = imgData[i + 4] === 0 ? 0 : 1;
 
-  console.log(colorCounts)
+
+    let colorKey = color.toString({format: "rgb"});
+    if (color.alpha > 0) {
+      nonTransparentPixels++;
+      non_transparent_color_arr.push(color);
+      non_transparent_counts[colorKey] = (non_transparent_counts[colorKey] || 0) + 1;
+    }
+    color_arr.push(color);
+    colorCounts[colorKey] = (colorCounts[colorKey] || 0) + 1;
+
+  }
 
   return {
     color_arr: color_arr,
+    non_transparent_arr: non_transparent_color_arr,
     color_counts: colorCounts,
+    non_transparent_counts: non_transparent_counts,
     height: canvas.height,
     width: canvas.width,
     non_transparent_pixels: nonTransparentPixels,
   }
 }
 
-function updateHistogram() {
-  // Get image data from the quantized canvas
-  const imageData = quantizedCtx.getImageData(0, 0, quantizedCanvas.width, quantizedCanvas.height);
-  const data = imageData.data;
-
-  let quantImageAnalysis = analyzeImage(quantizedCanvas, imageData.data);
-
+function updateHistogram(quantImageAnalysis) {
   // Count occurrences of each color
-  const colorCounts = quantImageAnalysis.color_counts;
-  const totalPixels = quantImageAnalysis.color_arr.coun;
+  const colorCounts = quantImageAnalysis.non_transparent_counts;
 
   // Clear and resize histogram canvas
   histogramCanvas.width = quantizedCanvas.width;
@@ -231,7 +232,7 @@ function updateHistogram() {
   histogramCtx.clearRect(0, 0, histogramCanvas.width, histogramCanvas.height);
 
   const sortable = Object.fromEntries(
-    Object.entries(colorCounts).sort(([,a],[,b]) => a-b)
+    Object.entries(colorCounts).sort(([, a], [, b]) => a - b)
   );
 
   // Draw the histogram bars
@@ -240,7 +241,7 @@ function updateHistogram() {
 
   colors.forEach((color) => {
     let colorObj = new Color(color);
-    if(colorObj.alpha > 0){
+    if (colorObj.alpha > 0) {
       const ratio = colorCounts[color] / quantImageAnalysis.non_transparent_pixels;
       const barHeight = ratio * histogramCanvas.height;
 
@@ -257,11 +258,103 @@ function updateHistogram() {
   });
 }
 
+function generateModernArt(artData) {
+  const canvas = document.getElementById("artCanvas");
+  const ctx = canvas.getContext("2d");
+
+  // Clear the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const width = canvas.width;
+  const height = canvas.height;
+
+  // Convert percentages into total areas
+  const totalPercentage = Object.values(artData).reduce((sum, percentage) => sum + percentage, 0);
+  const normalizedArtData = Object.entries(artData).map(([color, percentage]) => ({
+    color: new Color(color).to("srgb").toString(),
+    area: (percentage / totalPercentage) * (width * height),
+  }));
+
+  console.log(normalizedArtData)
+
+  // Generate random shapes that match the area proportions
+  normalizedArtData.forEach(({color, area}) => {
+    let remainingArea = area;
+
+    // Add random shapes until the required area is used
+    while (remainingArea > 0) {
+      const shapeType = Math.random() > 0.5 ? "rect" : "circle";
+
+      if (shapeType === "rect") {
+        // Generate random rectangle dimensions and position
+        const rectWidth = Math.random() * (width * 0.2);
+        const rectHeight = remainingArea / rectWidth;
+        const x = Math.random() * (width - rectWidth);
+        const y = Math.random() * (height - rectHeight);
+
+        // Draw the rectangle
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, rectWidth, rectHeight);
+
+        remainingArea -= rectWidth * rectHeight;
+      } else {
+        // Generate random circle radius and position
+        const radius = Math.sqrt(remainingArea / Math.PI) * Math.random();
+        const x = Math.random() * (width - 2 * radius) + radius;
+        const y = Math.random() * (height - 2 * radius) + radius;
+
+        // Draw the circle
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.closePath();
+
+        remainingArea -= Math.PI * radius * radius;
+      }
+    }
+  });
+}
+
+
+const objectMap = (obj, fn) =>
+  Object.fromEntries(
+    Object.entries(obj).map(
+      ([k, v], i) => [k, fn(v, k, i)]
+    )
+  )
+
 function render() {
   if (currentImageAnalysis) {
     console.log('quantizing');
     quantizeImage(currentImageAnalysis, quantizedCanvas, NUM_BUCKETS);
+
     console.log('histogramming');
-    updateHistogram();
+    // Get image data from the quantized canvas
+    const imageData = quantizedCtx.getImageData(0, 0, quantizedCanvas.width, quantizedCanvas.height);
+
+    let quantImageAnalysis = analyzeImage(quantizedCanvas, imageData.data);
+    updateHistogram(quantImageAnalysis);
+    generateModernArt(objectMap(quantImageAnalysis.non_transparent_counts, v => v / quantImageAnalysis.non_transparent_pixels))
+    // generateModernArt(objectMap(quantImageAnalysis.color_counts, v=>v/quantImageAnalysis.color_arr.length));
   }
 }
+
+
+const controlsDiv = document.getElementById("controls");
+const minimizeButton = document.getElementById("minimizeButton");
+const controlsContent = document.getElementById("controlsContent");
+
+minimizeButton.addEventListener("click", () => {
+  if (controlsDiv.classList.contains("minimized")) {
+    // Expand controls
+    controlsDiv.classList.remove("minimized");
+    controlsContent.style.display = "block";
+    minimizeButton.textContent = "Minimize";
+  } else {
+    // Minimize controls
+    controlsDiv.classList.add("minimized");
+    controlsContent.style.display = "none";
+    minimizeButton.textContent = "Expand";
+  }
+});

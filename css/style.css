@@ -301,10 +301,31 @@ canvas {
   position: fixed;
   bottom: 10px;
   left: 10px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(57, 55, 55, 0.9);
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.controls.minimized {
+  padding: 5px;
+  height: auto;
+  width: auto;
+}
+
+.controls.minimized #controlsContent {
+  display: none;
+}
+
+.controls button {
+  display: block;
+  margin: 5px 0;
+}
+
+.controlsContent {
+  display: block;
 }
 
 .controls input[type="file"] {
