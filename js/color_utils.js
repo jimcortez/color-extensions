@@ -79,3 +79,7 @@ export function get_opposite_temperature_color(color) {
   matchLab.l += 25
   return matchLab;
 }
+
+export function colorArrayToUInt8Array(color_arr, output_arr){
+
+}
